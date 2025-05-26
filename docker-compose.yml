@@ -14,4 +14,4 @@ services:
       - .:/rails
     stdin_open: true
     tty: true
-    command: bash entrypoint.sh
+    entrypoint: bash docker/entrypoint.sh

@@ -22,8 +22,8 @@ class ConvertAlbumPlayerToManyToMany < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :album_players, [:album_id, :player_id], unique: true
-    
+    add_index :album_players, %i[album_id player_id], unique: true
+
     # Isso poderia ser feito via LOTES pelo Active::Record ou bulk insert
     execute <<-SQL
       INSERT INTO album_players (album_id, player_id, created_at, updated_at)
@@ -41,11 +41,11 @@ class ConvertAlbumPlayerToManyToMany < ActiveRecord::Migration[5.2]
 
     # Restaurar dados do backup (pegar o primeiro player de cada album)
     execute <<-SQL
-      UPDATE albums 
+      UPDATE albums#{' '}
       SET player_id = (
-        SELECT player_id 
-        FROM album_players 
-        WHERE album_players.album_id = albums.id 
+        SELECT player_id#{' '}
+        FROM album_players#{' '}
+        WHERE album_players.album_id = albums.id#{' '}
         LIMIT 1
       );
     SQL
@@ -53,4 +53,4 @@ class ConvertAlbumPlayerToManyToMany < ActiveRecord::Migration[5.2]
     drop_table :album_players
     drop_table :albums_backup
   end
-end 
+end
